@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load tags %}
+{% load django_bootstrap5 %}
+{% block title %}印刷依頼書{% endblock %}
+{% block content %}
+    {% if file != None %}
+        <p><a href="{{ file }}" target="_blank" rel="noopener noreferrer">{{ file }}</a></p>
+    {% endif %}
+    <br>
+    <p>印刷依頼書を出力します。</p>
+    <form method="POST">
+        {% csrf_token %}
+        <p>{{ form.number.label_tag }}{{ form.number }}{{ form.number_choice }}</p>
+        {% bootstrap_button "エクセル出力" name="btn-p" button_type="submit" %}
+    </form>
+{% endblock %}

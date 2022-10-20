@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load tags %}
+{% load django_bootstrap5 %}
+{% block title %}資料整理{% endblock %}
+{% block content %}
+<p>顧問先詳細から資料整理に表示を有にしてください。</p>
+<div id="parent">
+    <div id="child1">
+        <p>100件まで表示します。</p>
+        <form method="POST">
+            {% csrf_token %}
+            <p>{{ form.name.label_tag }}{{ form.name }}</p>
+            {% bootstrap_button "表示" name="btn-r" button_type="submit" %}
+        </form>
+    </div>
+    <div id="child2">
+        <p>資料整理の内容を変更します。</p>
+        <form method="POST">
+            {% csrf_token %}
+            <p>{{ form.name.label_tag }}{{ form.name }}</p>
+            <p>{{ form.number.label_tag }}{{ form.number }}{{ form.number_choice }}</p>
+            <p>{{ form.content.label_tag }}{{ form.content }}</p>
+            {% bootstrap_button "追加または変更" name="btn-c" button_type="submit" %}
+            {% bootstrap_button "削除" name="btn-d" button_type="submit" %}
+        </form>
+    </div>
+</div>
+<table class="table">
+    <tr>
+        <td>番号</td>
+        <td>顧問先名</td>
+        <td>決算期</td>
+        <td>内容</td>
+    </tr>
+    {% for i in hyo %}
+    {% if forloop.counter|modulo:2 == 1 %}
+    <tr class="table-primary">
+        {% else %}
+    <tr>
+    {% endif %}
+
+    <td>{{ i.k_number_id }}</td>
+    <td>{{ i.k_number.k_name }}</td>
+    <td>{{ i.k_number.kessanki }}</td>
+    <td>{{ i.content_memo }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

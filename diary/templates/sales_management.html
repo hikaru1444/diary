@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load tags %}
+{% load django_bootstrap5 %}
+{% block title %}売上管理表{% endblock %}
+{% block content %}
+    {% if file != None %}
+        <p><a href="{{ file }}" target="_blank" rel="noopener noreferrer">{{ file }}</a></p>
+    {% endif %}
+    <br>
+    <div id="parent">
+        <div id="child1">
+            <p>表示します</p>
+            <form method="POST">
+                {% csrf_token %}
+                <p>{{ form.year.label_tag }}{{ form.year }}</p>
+                <p>{{ form.bank.label_tag }}{{ form.bank }}</p>
+                <p>{{ form.sales_withhold.label_tag }}{{ form.sales_withhold }}</p>
+                {% bootstrap_button "表示" name="btn-r" button_type="submit" %}
+                {% bootstrap_button "PDF出力" name="btn-p" button_type="submit" %}
+            </form>
+        </div>
+        <div id="child2">
+            <form method="POST">
+                {% csrf_token %}
+                <p hidden>{{ form.bank }}{{ form.sales_withhold }}</p>
+                <p>{{ form.year.label_tag }}{{ form.year }}</p>
+                <p>{{ form.number.label_tag }}{{ form.number }}{{ form.number_choice }}</p>
+                {% bootstrap_button "追加" name="btn-c" button_type="submit" %}
+            </form>
+        </div>
+        <div id="child3">
+            <br><br>
+        </div>
+        <div id="child4">
+            <br><br>
+
+        </div>
+
+    </div>
+    <h2>合計:{{ sum }}円</h2>
+    <div class="form_table">
+        <table class="table">
+            <thead>
+            <tr>
+                <td>　　　　　　</td>
+                <td><br>顧問先名　　　　</td>
+                <td><br>計</td>
+                <td><br>1月</td>
+                <td><br>2月</td>
+                <td><br>3月</td>
+                <td><br>4月</td>
+                <td><br>5月</td>
+                <td><br>6月</td>
+                <td><br>7月</td>
+                <td><br>8月</td>
+                <td><br>9月</td>
+                <td><br>10月</td>
+                <td><br>11月</td>
+                <td><br>12月</td>
+                <td>前期<br>未収</td>
+                <td>当期<br>未収</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% for i in forms %}
+                <form method="POST">
+                    {% csrf_token %}
+                    {% if forloop.counter|modulo:2 == 1 %}
+                        <tr class="table-primary">
+                            {% else %}
+                        <tr>
+                    {% endif %}
+                    <td hidden>{{ i.year }}{{ i.number }}{{ i.number_choice }}{{ i.bank }}</td>
+                    <td>{% bootstrap_button "更" name="btn-u" button_type="submit" %}
+                        <button type="button" class="btn btn-primary mb-12" data-toggle="modal"
+                                data-target="#sales{{ forloop.counter }}">削
+                        </button>
+                        <div class="modal fade" id="sales{{ forloop.counter }}" tabindex="-1" role="dialog"
+                             aria-labelledby="basicModal"
+                             aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <label>{{ i.number.value }} {{ i.k_name.value }}を削除しますか？</label>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+                                        <button type="submit" class="btn btn-danger" name="btn-d">削除</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ i.number.value }} {{ i.k_name.value }}</td>
+                    <td>{{ i.kei.value }}</td>
+                    <td>{{ i.m1|add_class:"td_int" }}</td>
+                    <td>{{ i.m2|add_class:"td_int" }}</td>
+                    <td>{{ i.m3|add_class:"td_int" }}</td>
+                    <td>{{ i.m4|add_class:"td_int" }}</td>
+                    <td>{{ i.m5|add_class:"td_int" }}</td>
+                    <td>{{ i.m6|add_class:"td_int" }}</td>
+                    <td>{{ i.m7|add_class:"td_int" }}</td>
+                    <td>{{ i.m8|add_class:"td_int" }}</td>
+                    <td>{{ i.m9|add_class:"td_int" }}</td>
+                    <td>{{ i.m10|add_class:"td_int" }}</td>
+                    <td>{{ i.m11|add_class:"td_int" }}</td>
+                    <td>{{ i.m12|add_class:"td_int" }}</td>
+                    <td>{{ i.first_term|add_class:"td_int" }}</td>
+                    <td>{{ i.current_term|add_class:"td_int" }}</td>
+                    </tr>
+                </form>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

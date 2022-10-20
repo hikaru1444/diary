@@ -1,0 +1,15 @@
+#コメント
+
+*.pyc
+*.pdf
+*.log
+*.xlsx
+static/hide/
+diary/*PDF/
+diary/*EXCEL/
+diary/static/*PDF/
+diary/static/*EXCEL/
+venv/
+.idea/
+.idea/workspace.xml
+*.env

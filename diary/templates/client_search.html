@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load tags %}
+{% load django_bootstrap5 %}
+{% block title %}顧問先名検索{% endblock %}
+{% block content %}
+<p>検索文字を含む顧問先名前と番号を出力します。</p>
+<form method="POST">
+    {% csrf_token %}
+    <div class="mb-4 col-2">{% bootstrap_field form.name %}</div>
+    {% bootstrap_button "表示" name="btn-r" button_type="submit" %}
+</form>
+<br>
+<br>
+<p>{{ result | linebreaks }}</p>
+<table class="table">
+    <tr>
+        <th>顧問先番号</th>
+        <th>顧問先名</th>
+    </tr>
+    <tbody>
+    {% for i in hyo %}
+    {% if forloop.counter|modulo:2 == 1 %}
+    <tr class="table-primary">
+        {% else %}
+    <tr>
+        {% endif %}
+        <td>{{ i.k_number }}</td>
+        <td>{{ i.k_name }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+{% endblock %}

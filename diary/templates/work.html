@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% load tags %}
+{% load django_bootstrap5 %}
+{% load timedelta_filter %}
+{% load humanize %}
+{% block title %}勤務表{% endblock %}
+{% block content %}
+    <div id="parent">
+        <div id="child1">
+            <p>出勤表を出力します</p>
+            <form method="POST">
+                {% csrf_token %}
+                <p>{{ form.year.label_tag }}{{ form.year }}{{ form.month.label_tag }}{{ form.month }}</p>
+                {% bootstrap_button "表示" name="btn-r" button_type="submit" %}
+                {% bootstrap_button "確認" name="btn-check" button_type="submit" %}
+            </form>
+            <br>
+            <p>1件ずつ追加または削除します。時間は0:00~23:59で入力。</p>
+            <p>走行距離は1500mの場合、1.5と入力してください</p>
+            <p>休みの日は時間を0:00にして備考に「休み」等を書いてください</p>
+            <form method="POST">
+                {% csrf_token %}
+                <p>
+                    {{ form.year.label_tag }}{{ form.year }}{{ form.month.label_tag }}{{ form.month }}{{ form.day.label_tag }}{{ form.day }}</p>
+                <p>
+                    {{ form.in_time.label_tag }}{{ form.in_time }}{{ form.out_time.label_tag }}{{ form.out_time }}{{ form.rest_time.label_tag }}{{ form.rest_time }}</p>
+                <p>{{ form.note.label_tag }}{{ form.note }}</p>
+                <p>{{ form.distance.label_tag }}{{ form.distance }}</p>
+                {% bootstrap_button "追加または更新" name="btn-c" button_type="submit" %}
+
+            <br>
+            <p>全体を表示します。<span style="color: red; ">※所長のみ操作可</span></p>
+            <form method="POST">
+                {% csrf_token %}
+                <p>{{ form.year.label_tag }}{{ form.year }}{{ form.month.label_tag }}{{ form.month }}</p>
+                {% bootstrap_button "表示" name="btn-r2" button_type="submit" %}
+            </form>
+
+        </div>
+        <div id="child2">
+            <h2>{{ request.user.last_name }} {{ request.user.first_name }}さんの出勤日数は{{ check_dates }}日</h2>
+            <h2>合計{{ check_times }}時間{{ check_distances }}km燃料費{{ check_gas|intcomma }}円</h2>
+            <table class="table">
+                <tr>
+                    <th>名前</th>
+                    <th>日付</th>
+                    <th>曜日</th>
+                    <th>出勤</th>
+                    <th>退勤</th>
+                    <th>休憩</th>
+                    <th>合計</th>
+                    <th>備考</th>
+                    <th>走行距離</th>
+                </tr>
+                {% for i in hyo %}
+                    {% if forloop.counter|modulo:2 == 1 %}
+                        <tr class="table-primary">
+                            {% else %}
+                        <tr>
+                    {% endif %}
+                    <td>{{ i.9 }}{{ i.10 }}</td>
+                    <td>{{ i.1|date:"m/d" }}</td>
+                    {% if i.1|date:"l" == '土曜日' or i.1|date:"l"  == '日曜日' %}
+                        <td><span style="color: red; ">{{ i.1|date:"l"|cut:'曜日' }}</span></td>
+                    {% else %}
+                        <td>{{ i.1|date:"l"|cut:'曜日' }}</td>{% endif %}
+                    {% if i.2|time:"H:i" == "00:00" %}
+                        <td></td>{% else %}
+                        <td>{{ i.2 }}</td>{% endif %}
+                    {% if i.3|time:"H:i" == "00:00" %}
+                        <td></td>{% else %}
+                        <td>{{ i.3 }}</td>{% endif %}
+                    {% if i.4|time:"H:i" == "00:00" %}
+                        <td></td>{% else %}
+                        <td>{{ i.4 }}</td>{% endif %}
+                    {% if i.8|timedelta:"{hours2}:{minutes2}" == "00:00" %}
+                        <td></td>
+                    {% else %}
+                        <td>{{ i.8|timedelta:"{hours}:{minutes2}" }}</td>{% endif %}
+                    <td>{{ i.5|default:"" }}</td>
+                    <td>{{ i.6|default:"" }}</td>
+                {% endfor %}
+            </table>
+            <br>
+            <h2>{{ check4 }}</h2>
+            <table class="table">
+                <tbody>
+                <tr>
+                    <th>名前</th>
+                    <th>合計日数</th>
+                    <th>合計時間</th>
+                    <th>走行距離</th>
+                    <th>合計燃料費</th>
+                </tr>
+                {% for i in short_hyo %}
+                    {% if forloop.counter|modulo:2 == 1 %}
+                        <tr class="table-primary">
+                            {% else %}
+                        <tr>
+                    {% endif %}
+                <td>{{ i.0 }}</td>
+                <td>{{ i.1 }}日</td>
+                <td>{{ i.2 }}時間</td>
+                <td>{{ i.3 }}km</td>
+                <td>{{ i.4|intcomma }}円</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <br>
+            <table class="table">
+                <tbody>
+                <tr>
+                    <th>名前</th>
+                    <th>日付</th>
+                    <th>曜日</th>
+                    <th>出勤</th>
+                    <th>退勤</th>
+                    <th>休憩</th>
+                    <th>合計</th>
+                    <th>備考</th>
+                    <th>走行距離</th>
+                </tr>
+                {% for i in long_hyo %}
+                    {% if forloop.counter|modulo:2 == 1 %}
+                        <tr class="table-primary">
+                            {% else %}
+                        <tr>
+                    {% endif %}
+                    <td>{{ i.9 }}{{ i.10 }}</td>
+                    <td>{{ i.1|date:"m/d" }}</td>
+                    {% if i.1|date:"l" == '土曜日' or i.1|date:"l"  == '日曜日' %}
+                        <td><span style="color: red; ">{{ i.1|date:"l"|cut:'曜日' }}</span></td>
+                    {% else %}
+                        <td>{{ i.1|date:"l"|cut:'曜日' }}</td>{% endif %}
+                    {% if i.2|time:"H:i" == "00:00" %}
+                        <td></td>{% else %}
+                        <td>{{ i.2 }}</td>{% endif %}
+                    {% if i.3|time:"H:i" == "00:00" %}
+                        <td></td>{% else %}
+                        <td>{{ i.3 }}</td>{% endif %}
+                    {% if i.4|time:"H:i" == "00:00" %}
+                        <td></td>{% else %}
+                        <td>{{ i.4 }}</td>{% endif %}
+                    {% if i.8|timedelta:"{hours2}:{minutes2}" == "00:00" %}
+                        <td></td>
+                    {% else %}
+                        <td>{{ i.8|timedelta:"{hours}:{minutes2}" }}</td>{% endif %}
+                    <td>{{ i.5|default:"" }}</td>
+                    <td>{{ i.6|default:"" }}</td>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

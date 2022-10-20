@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load tags %}
+{% load django_bootstrap5 %}
+{% block title %}顧問先詳細{% endblock %}
+{% block content %}
+    <form method="POST">
+        {% csrf_token %}
+        {% bootstrap_button "更新" button_type="submit" %}
+        <div class="parent2">
+            <div>
+                {% for field in form %}
+                    {% if field.name == 'representative_ruby' %}
+                        </div>
+                        <div>
+                            {% elif field.name == 'business_category' %}
+                        </div>
+                        <div>
+                            {% elif field.name == 'form_of_involvement' %}
+                        </div>
+                        <div>
+                            {% elif field.name == 't_filing' %}
+                        </div>
+                        <div>
+                    {% endif %}
+                    <div>
+                        {% bootstrap_field field size='sm' wrapper_class='mb-1' %}
+                    </div>
+                {% endfor %}
+                </div>
+        </div>
+    </form>
+{% endblock %}

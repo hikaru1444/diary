@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load tags %}
+{% load django_bootstrap5 %}
+{% block title %}提出予定ボックス{% endblock %}
+{% block content %}
+    <div id="parent">
+        <div id="child1">
+            <p>表示します</p>
+            <form method="POST">
+                {% csrf_token %}
+                <p>{{ form.number.label_tag }}{{ form.number }}{{ form.number_choice }}</p>
+                <p>{{ form.date.label_tag }}{{ form.date }}</p>
+                {% bootstrap_button "詳細を表示" name="btn-r" button_type="submit" %}
+            </form>
+            <br>
+            <p>詳細を出力します※<>を使用しないでください</p>
+            <form method="POST">
+                {% csrf_token %}
+                <p>{{ form.number.label_tag }}{{ form.number }}{{ form.number_choice }}</p>
+                <p>{{ form.date.label_tag }}{{ form.date }}</p>
+                <p>{{ form.filing_type.label_tag }}{{ form.filing_type }}</p>
+                <p>{{ form.content.label_tag }}{{ form.content|safe }}</p>
+                <p>{{ form.note.label_tag }}{{ form.note }}</p>
+                {% bootstrap_button "追加または変更" name="btn-c" button_type="submit" %}
+                {% bootstrap_button "詳細を削除" name="btn-d" button_type="submit" %}
+            </form>
+            <br>
+            <p>顧問先ごとに表示します</p>
+            <form method="POST">
+                {% csrf_token %}
+                <p>{{ form.number.label_tag }}{{ form.number }}{{ form.number_choice }}</p>
+                {% bootstrap_button "顧問先ごとに表示" name="btn-r1" button_type="submit" %}
+            </form>
+
+        </div>
+        <div id="child2">
+            <h2>提出予定</h2>
+            <table class="table">
+                <tbody>
+                <tr>
+                    <th>番号</th>
+                    <th>顧問先名</th>
+                    <th>日付</th>
+                    <th>提出</th>
+                    <th>内容</th>
+                    <th>備考</th>
+                </tr>
+                </tbody>
+                {% for i in hyo %}
+                    {% if forloop.counter|modulo:2 == 1 %}
+                        <tr class="table-primary">
+                            {% else %}
+                        <tr>
+                    {% endif %}
+                <td>{{ i.k_number_id }}</td>
+                <td>{{ i.k_number.k_name }}</td>
+                <td>{{ i.date }}</td>
+                <td>{{ i.filing_type }}</td>
+                <td>{{ i.content|safe }}</td>
+                <td>{{ i.note }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            <br>
+            <h2>提出済み(20件)</h2>
+            <table class="table">
+                <tbody>
+                <tr>
+                    <th>番号</th>
+                    <th>顧問先名</th>
+                    <th>日付</th>
+                    <th>提出</th>
+                    <th>内容</th>
+                    <th>備考</th>
+                </tr>
+                </tbody>
+                {% for i in hyo2 %}
+                    {% if forloop.counter|modulo:2 == 1 %}
+                        <tr class="table-primary">
+                            {% else %}
+                        <tr>
+                    {% endif %}
+                <td>{{ i.k_number_id }}</td>
+                <td>{{ i.k_number.k_name }}</td>
+                <td>{{ i.date }}</td>
+                <td>{{ i.filing_type }}</td>
+                <td>{{ i.content|safe }}</td>
+                <td>{{ i.note }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            <br>
+            <h2>顧問先別</h2>
+            <table class="table">
+                <tbody>
+                <tr>
+                    <th>番号</th>
+                    <th>顧問先名</th>
+                    <th>日付</th>
+                    <th>提出</th>
+                    <th>内容</th>
+                    <th>備考</th>
+                </tr>
+                </tbody>
+                {% for i in hyo3 %}
+                    {% if forloop.counter|modulo:2 == 1 %}
+                        <tr class="table-primary">
+                            {% else %}
+                        <tr>
+                    {% endif %}
+                <td>{{ i.k_number_id }}</td>
+                <td>{{ i.k_number.k_name }}</td>
+                <td>{{ i.date }}</td>
+                <td>{{ i.filing_type }}</td>
+                <td>{{ i.content|safe }}</td>
+                <td>{{ i.note }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    <br>
+
+{% endblock %}

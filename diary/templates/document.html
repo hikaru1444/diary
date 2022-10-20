@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load tags %}
+{% block title %}ドキュメント{% endblock %}
+{% block content %}
+<object data="../media/documents.txt" type="text/plain"></object>
+{% for line in lists %}
+<br>
+{{ line|safe }}
+{% endfor %}
+{% endblock %}

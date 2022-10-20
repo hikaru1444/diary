@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load tags %}
+{% load django_bootstrap5 %}
+{% block title %}請求書作成{% endblock %}
+{% block content %}
+{% if file != None %}
+<p><a href="{{ file }}" target="_blank" rel="noopener noreferrer">{{ file }}</a></p>
+{% endif %}
+<br>
+<div id="parent">
+        <div id="child1">
+<form method="POST">
+    {% csrf_token %}
+    <p>{{ form.date.label_tag }}{{ form.date }}</p>
+    <p>{{ form.number.label_tag }}{{ form.number }}{{ form.number_choice }}</p>
+    <p>{{ form.content.label_tag }}{{ form.content }}</p>
+    <p>{{ form.items.label_tag }}{{ form.items }}</p>
+    <p>{{ form.money.label_tag }}{{ form.money }}</p>
+    <p>{{ form.consumption.label_tag }}{{ form.consumption }}</p>
+    <p>{{ form.withholding_income_tax.label_tag }}{{ form.withholding_income_tax }}</p>
+    <p>{{ form.reconstruction_tax.label_tag }}{{ form.reconstruction_tax }}</p>
+
+    {% bootstrap_button "追加" name="btn-c" button_type="submit" %}
+</form>
+        </div>
+    <div id="child2">
+<p>日付と顧問先番号を元に請求書を削除します。</p>
+<form method="POST">
+    {% csrf_token %}
+    <p>{{ form.date.label_tag }}{{ form.date }}</p>
+    <p>{{ form.number.label_tag }}{{ form.number }}{{ form.number_choice }}</p>
+    <p>{{ form.content.label_tag }}{{ form.content }}</p>
+    {% bootstrap_button "削除" name="btn-d" button_type="submit" %}
+</form>
+<br>
+<p>印刷をします。</p>
+<form method="POST">
+    {% csrf_token %}
+    <p>{{ form.date.label_tag }}{{ form.date }}</p>
+    <p>{{ form.number.label_tag }}{{ form.number }}{{ form.number_choice }}</p>
+    <p>{{ form.transfer_date.label_tag }}{{ form.transfer_date }}</p>
+    {% bootstrap_button "表示" name="btn-r" button_type="submit" %}
+    {% bootstrap_button "PDF出力" name="btn-p" button_type="submit" %}
+</form>
+    </div></div>
+<table class="table">
+    <tr>
+        <th>顧問先番号</th>
+        <th>請求内容</th>
+        <th>内訳</th>
+        <th>金額</th>
+    </tr>
+    <tbody>
+    {% for i in hyo %}
+    {% if forloop.counter|modulo:2 == 1 %}
+        <tr class="table-primary">
+    {% else %}
+            <tr>
+        {% endif %}
+        <td>{{ i.k_number_id }}</td>
+        <td>{{ i.reward }}</td>
+        <td>{{ i.items }}</td>
+        <td>{{ i.money }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

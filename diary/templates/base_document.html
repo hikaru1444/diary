@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load tags %}
+{% load django_bootstrap5 %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+    {% if file != None %}
+        <p><a href="{{ file }}" target="_blank" rel="noopener noreferrer">{{ file }}</a></p>
+    {% endif %}
+    <div id="parent">
+        <div id="child1">
+            <form method="POST">
+                {% csrf_token %}
+                <p>
+                    {% for field in read_form %}
+                        {{ field.label_tag }}{{ field }}
+                    {% endfor %}
+                </p>
+                <p>
+                    {% bootstrap_button "表示" name="btn-r" button_type="submit" %}
+                    {% bootstrap_button "PDF出力" name="btn-p" button_type="submit" %}
+                </p>
+            </form>
+        </div>
+        <div id="child2">
+            <form method="POST">
+                {% csrf_token %}
+                <p>
+                    {% for field in read_form %}
+                        <a hidden>{{ field.label_tag }}{{ field }}</a>
+                    {% endfor %}
+                    {% for field in create_form %}
+                        {{ field.label_tag }}{{ field }}
+                    {% endfor %}
+                </p>
+                <p>{% bootstrap_button "追加" name="btn-c" button_type="submit" %}</p>
+            </form>
+        </div>
+    </div>
+    <h4>{{ table_title }}</h4>
+    <div class="form_table" style="max-width: {{ max_width }}">
+        <table class="table table-sm">
+            <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                {% for i in table_form.0 %}
+                    <th>{{ i.label|safe }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for field in table_form %}
+                <form method="POST">
+                    {% csrf_token %}
+                    {% if forloop.counter|modulo:2 == 1 %}
+                        <tr class="table-primary">
+                            {% else %}
+                        <tr>
+                    {% endif %}
+
+                    {% if table_form_height == 2 and forloop.counter|modulo:2 == 1 or table_form_height != 2 %}
+                        <td>
+                            <button type="submit" name="btn-u" class="btn btn-primary table_button">更
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-primary table_button" data-toggle="modal"
+                                    data-target="#delete{{ forloop.counter }}">削
+                            </button>
+                            <div class="modal fade" id="delete{{ forloop.counter }}" tabindex="-1" role="dialog"
+                                 aria-labelledby="basicModal"
+                                 aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <label>{{ field.number.value }} {{ field.k_name.value }}を削除しますか？</label>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">閉じる
+                                            </button>
+                                            <button type="submit" class="btn btn-danger" name="btn-d">削除</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <a class="btn btn-primary table_button" target="_blank"
+                               href="{% url 'client_detail' %}?k_number={{ field.number.value }}" role="button">移</a>
+                        </td>
+                    {% else %}
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    {% endif %}
+
+                    <td hidden>
+                        {% for field in read_form %}
+                            {{ field }}
+                        {% endfor %}
+                    </td>
+                    {% for i in field %}
+                        {% if i.name == "number" or i.name == "k_name" %}
+                            {% if field.insert_date.value != None %}
+                                <td class="color_red">{{ i.value }}<a hidden>{{ i }}</a></td>
+                            {% else %}
+                                <td>{{ i.value }}<a hidden>{{ i }}</a></td>
+                            {% endif %}
+                        {% else %}
+                            <td>{{ i }}</td>
+                        {% endif %}
+                    {% endfor %}
+                    </tr>
+                    {% if table_form_height == 2 and forloop.counter|modulo:2 == 0 or table_form_height != 2 %}
+                        </form>
+                    {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

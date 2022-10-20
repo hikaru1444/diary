@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load tags %}
+{% load django_bootstrap5 %}
+{% block title %}顧問先入力{% endblock %}
+{% block content %}
+    <p>顧問先の詳細に移動します。存在しない場合メッセージなしでリダイレクトされます。</p>
+    <form action="{% url 'client_detail' %}" method="GET">
+        {% csrf_token %}
+        <div class="mb-4 col-2">{% bootstrap_field form.number %}</div>
+        {% bootstrap_button "詳細に移動" name="btn-r" button_type="submit" target="_blank" %}
+    </form>
+    <br>
+    <p>ログイン情報を元に出力しています。</p>
+    <form action="{% url 'client_detail' %}" method="GET">
+        {% csrf_token %}
+        <div class="mb-4 col-4">{% bootstrap_field form.number_choice %}</div>
+        {% bootstrap_button "詳細に移動" name="btn-r" button_type="submit" target="_blank" %}
+    </form>
+    <br>
+    <p>
+        <label>
+            空いている番号(顧問先名が書かれていない)
+            <select class="form-control">
+                {% for ins in ins_check %}
+                {% if ins.k_name == "" %}
+                <option selected style="color: red">{{ ins.k_number }}</option>
+                {% else %}
+                <option selected>{{ ins.k_number }} {{ ins.k_name }}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+        </label>
+    </p>
+    <br>
+    <p>分類ごとに全件出力します。</p>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-4 col-2">{% bootstrap_field form.type %}</div>
+        {% bootstrap_button "表示" name="btn-r1" button_type="submit" %}
+    </form>
+    <br><br>
+    <table class="table">
+        <tr>
+            <th>顧問先番号</th>
+            <th>顧問先名</th>
+        </tr>
+        <tbody>
+        {% for i in hyo %}
+            {% if forloop.counter|modulo:2 == 1 %}
+                <tr class="table-primary">
+                    {% else %}
+                <tr>
+            {% endif %}
+        <td>{{ i.k_number }}</td>
+        <td>{{ i.k_name }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

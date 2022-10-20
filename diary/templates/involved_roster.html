@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load tags %}
+{% load django_bootstrap5 %}
+{% block title %}関与先名簿{% endblock %}
+{% block content %}
+{% if file != None %}
+<p><a href="{{ file }}" target="_blank" rel="noopener noreferrer">{{ file }}</a></p>
+{% endif %}
+<p>税理士関与先名簿PDFを作成します</p>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {% bootstrap_button "PDF作成" name="btn-p" button_type="submit" %}
+    {% bootstrap_button "全件PDF作成" name="btn-p2" button_type="submit" %}
+</form>
+<br>
+<div id="parent">
+    <div id="child1">
+<p>法人</p>
+<table class="table mb-4 col-8">
+            <tr>
+                <th>管轄税務署</th>
+                <th>件数</th>
+                <th></th>
+            </tr>
+            {% for i in hyo %}
+    {% if forloop.counter|modulo:2 == 1 %}
+        <tr class="table-primary">
+    {% else %}
+            <tr>
+        {% endif %}
+        <td>{{ i.tax_agency }}</td>
+        <td>{{ i.tax_agency__count }}</td>
+    </tr>
+    {% endfor %}
+        </table>
+    </div>
+<div id="child2">
+<p>法人以外</p>
+<table class="table mb-4 col-8">
+            <tr>
+                <th>管轄税務署</th>
+                <th>件数</th>
+                <th></th>
+            </tr>
+            {% for i in hyo2 %}
+    {% if forloop.counter|modulo:2 == 1 %}
+        <tr class="table-primary">
+    {% else %}
+            <tr>
+        {% endif %}
+        <td>{{ i.tax_agency }}</td>
+        <td>{{ i.tax_agency__count }}</td>
+    </tr>
+    {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}

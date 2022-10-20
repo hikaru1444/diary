@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% load widget_tweaks %}
+{% load tags %}
+{% load django_bootstrap5 %}
+{% block title %}メインページ{% endblock %}
+{% block content %}
+    <div id="parent">
+        <div id="child1">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-4 col-4">{% bootstrap_field form.username %}</div>
+                {% bootstrap_button "ログイン" name="btn-login" button_type="submit" %}
+                {% bootstrap_button "ログアウト" name="btn-logout" button_type="submit" %}
+            </form>
+        </div>
+        <div id="child2">
+            <h4>お知らせ</h4>
+            <div id="news_size">
+                <div id="news_color">
+                    2022年<br>
+                    お知らせを追加しました<br>
+		    <br><br><br><br><br><br><br><br><br><br><br>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div id="parent">
+        <div id="child1">
+            <h2>よく使う</h2>
+            <p><a href="{% url 'work' %}">勤務表</a></p>
+            <p><a href="{% url 'client_search' %}">顧問先名検索</a></p>
+            <p><a href="{% url 'client_input' %}">関与先名簿</a></p>
+            <p><a href="{% url 'invoice_create' %}">請求書作成</a></p>
+            <p><a href="{% url 'filing' %}">提出一覧</a></p>
+        </div>
+        <div id="child2">
+            <h2>PDF作成</h2>
+            <p><a href="{% url 'involved_roster' %}">税理士関与先名簿</a></p>
+            <p><a href="{% url 'filing' %}">提出一覧</a></p>
+            <p><a href="{% url 'year_adjustment' %}">年末調整</a></p>
+            <p><a href="{% url 'gift_tax_check' %}">贈与税申告進行チェック表</a></p>
+            <p><a href="{% url 'filing_final_tax' %}">確定申告進行チェック表</a></p>
+            <p><a href="{% url 'withholding' %}">源泉税納期特例チェック表</a></p>
+        </div>
+        <div id="child3">
+            <h2>その他</h2>
+            <p><a href="{% url 'schedule_box' %}">提出予定ボックス</a></p>
+            <p><a href="{% url 'direct_payment' %}">ダイレクト納付</a></p>
+            <p><a href="{% url 'sales_management' %}">売上管理表</a></p>
+            <p><a href="{% url 'print_request' %}">印刷依頼書</a></p>
+            <p><a href="{% url 'memo' %}">資料整理</a></p>
+            <p><a href="{% url 'officer_change' %}">役員変更登記</a></p>
+            <p><a href="{% url 'document' %}">ドキュメント</a></p>
+            <p><a href="{% url 'admin:index' %}">管理者用</a></p>
+
+        </div>
+
+    </div>
+{% endblock %}
